@@ -6,21 +6,15 @@
 // The sensor observes position but not velocity, so H extracts position.
 class PositionMeasurementModel {
 public:
-    // r_variance: variance of the sensor's position measurement noise.
-    explicit PositionMeasurementModel(double r_variance) : r_variance_(r_variance) {}
-
+    PositionMeasurementModel(int dim, double r_variance) : dim_(dim), r_variance_(r_variance) {}
     Eigen::MatrixXd H() const {
-        Eigen::MatrixXd H(1, 2);
-        H << 1.0, 0.0;
+        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(dim_, 2*dim_);
+        H.block(0, 0, dim_, dim_) = Eigen::MatrixXd::Identity(dim_, dim_);
         return H;
     }
-
     Eigen::MatrixXd R() const {
-        Eigen::MatrixXd R(1, 1);
-        R << r_variance_;
-        return R;
+        return Eigen::MatrixXd::Identity(dim_, dim_) * r_variance_;
     }
-
 private:
-    double r_variance_;
+    int dim_; double r_variance_;
 };

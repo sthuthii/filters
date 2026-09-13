@@ -12,14 +12,15 @@
 // 2. The covariance trace should shrink after each update compared to
 //    right after predict (the filter should become more confident).
 int main() {
+    const int dim = 1;
     const double dt = 1.0;
     const double true_velocity = 2.0;
     const double sigma_a = 0.1;
     const double r_variance = 0.5;
 
-    ConstantVelocityModel motion_model(sigma_a);
-    PositionMeasurementModel measurement_model(r_variance);
-    KalmanFilter kf(2);
+    ConstantVelocityModel motion_model(dim, sigma_a);
+    PositionMeasurementModel measurement_model(dim, r_variance);
+    KalmanFilter kf(2 * dim);
 
     Eigen::VectorXd x0(2);
     x0 << 0.0, 0.0;  // deliberately wrong initial velocity guess
