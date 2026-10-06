@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -107,10 +108,17 @@ int main(int argc, char** argv) {
     }
 
     // dim is inferred from the CSV header, so this works unmodified for
-    // dim=1 (the original 1D CV case), dim=2 (x/y), dim=3 (x/y/z), etc. —
-    // as long as MotionModel / MeasurementModel are built to accept `dim`.
-    ConstantVelocityModel motion_model(dim, sigma_a);
-    PositionMeasurementModel measurement_model(dim, r_variance);
+    // dim=1 (the original 1D CV case), dim=2 (x/y), dim=3 (x/y/z), etc.
+    //
+    // Held as MotionModel*/MeasurementModel* rather than the concrete
+    // types: the rest of this function only ever calls the interface
+    // methods, so a different motion or sensor model could be swapped
+    // in here (e.g. picked at runtime from a config) without touching
+    // anything below this line.
+    std::unique_ptr<MotionModel> motion_model =
+        std::make_unique<ConstantVelocityModel>(dim, sigma_a);
+    std::unique_ptr<MeasurementModel> measurement_model =
+        std::make_unique<PositionMeasurementModel>(dim, r_variance);
     KalmanFilter kf(2 * dim);
 
     std::ofstream out(output_path);
@@ -133,11 +141,15 @@ int main(int argc, char** argv) {
         const double dt = samples[i].t - prev_t;
         prev_t = samples[i].t;
 
-        kf.predict(motion_model.F(dt), motion_model.Q(dt));
+        kf.predict(motion_model->F(dt), motion_model->Q(dt));
 
         Eigen::VectorXd z(dim);
         for (int d = 0; d < dim; ++d) z(d) = samples[i].z[d];
-        kf.update(z, measurement_model.H(), measurement_model.R());
+        // jacobian(x) is constant (= H) for a linear sensor, so which
+        // state it's evaluated at doesn't matter here — this is the same
+        // call shape main_ekf.cpp uses for its nonlinear sensor.
+        Eigen::MatrixXd H = measurement_model->jacobian(kf.state());
+        kf.update(z, H, measurement_model->R());
 
         writeRow(out, samples[i].t, samples[i].z, kf.state(), dim);
     }
