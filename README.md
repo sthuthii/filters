@@ -70,6 +70,14 @@ This produces two executables in `build/`:
    python3 python/plot_results.py scenarios/trajectory.csv results/output.csv results/plot.png
    ```
 
+For radar EKF or UKF output, use the corresponding Cartesian trajectory and
+velocity plot:
+
+```bash
+python3 python/plot_ekf_results.py results/ekf_output.csv results/ekf_output.png
+python3 python/plot_ukf_results.py results/ukf_output.csv results/ukf_output.png
+```
+
 `scenarios/measurements.csv` just needs a header `t,z` and one `time,position`
 pair per line — you can swap in your own data (e.g. from a file or a UDP
 client) instead of the generated one, as long as it follows that format.
