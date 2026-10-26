@@ -1,0 +1,8 @@
+{
+  "description": "Task 1 scenario: a single target moving at constant velocity along one axis.",
+  "dt": 0.1,
+  "total_time": 20.0,
+  "start_position": 0.0,
+  "velocity": 5.0,
+  "measurement_noise_std": 2.0
+}

@@ -1,0 +1,12 @@
+{
+  "description": "Target drives straight, then holds a constant turn, then straightens out again. Used to demonstrate why a CV Kalman Filter lags/overshoots on a turn while a CTRV EKF tracks it correctly.",
+  "dt": 0.1,
+  "total_time": 30.0,
+  "speed": 8.0,
+  "straight_duration_start": 5.0,
+  "turn_duration": 10.0,
+  "turn_rate_deg_per_sec": 15.0,
+  "start_position": [0.0, 0.0],
+  "start_heading_deg": 0.0,
+  "measurement_noise_std": 3.0
+}

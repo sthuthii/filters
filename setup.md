@@ -141,3 +141,9 @@ Remove-Item -Recurse -Force build-msvc
 cmake -S . -B build-msvc -G "Visual Studio 17 2022"
 cmake --build build-msvc --config Release --parallel
 ```
+
+The repository includes `.vscode/c_cpp_properties.json` configured for the
+Visual Studio 2022 BuildTools compiler used by the Windows build. If VS Code
+reports that it cannot open standard headers such as `<filesystem>`, select
+the `MSVC 2022` IntelliSense configuration from the C/C++ status bar and
+reload the window.

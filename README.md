@@ -107,6 +107,20 @@ python3 python/plot_ekf_results.py results/ekf_output.csv results/ekf_output.png
 python3 python/plot_ukf_results.py results/ukf_output.csv results/ukf_output.png
 ```
 
+To compare a constant-velocity KF with the coordinated-turn EKF on the same
+Cartesian measurements, generate a 2D scenario and run:
+
+```bash
+python3 python/generate_2d_trajectory.py scenarios/trajectory_2d.csv
+python3 python/generate_2d_measurements.py scenarios/trajectory_2d.csv scenarios/measurements_2d.csv
+./build/compare_filters scenarios/measurements_2d.csv \
+  results/comparison/cv_output.csv results/comparison/ekf_output.csv \
+  scenarios/trajectory_2d.csv
+```
+
+The comparison command writes both estimate CSVs and reports each filter's
+position RMSE against the supplied ground truth.
+
 `scenarios/measurements.csv` needs a header `t,z1,z2,...` and one time plus
 position sample per line. Radar inputs need a `t,range,bearing` header.
 

@@ -1,4 +1,6 @@
 #include <cmath>
+#include <cctype>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -40,6 +42,9 @@ std::vector<RadarSample> readRadarMeasurements(const std::string& path) {
         std::getline(ss, t_str, ',');
         std::getline(ss, r_str, ',');
         std::getline(ss, b_str, ',');
+        if (t_str.empty() || r_str.empty() || b_str.empty()) {
+            throw std::runtime_error("Malformed radar measurement row: " + line);
+        }
         samples.push_back({std::stod(t_str), std::stod(r_str), std::stod(b_str)});
     }
     return samples;
@@ -79,7 +84,18 @@ int main(int argc, char** argv) {
         std::cerr << "No measurements found in " << input_path << std::endl;
         return 1;
     }
+    for (size_t i = 1; i < samples.size(); ++i) {
+        if (samples[i].t <= samples[i - 1].t) {
+            std::cerr << "Measurement timestamps must be strictly increasing" << std::endl;
+            return 1;
+        }
+    }
 
+    const std::filesystem::path output_parent =
+        std::filesystem::path(output_path).parent_path();
+    if (!output_parent.empty()) {
+        std::filesystem::create_directories(output_parent);
+    }
     std::ofstream out(output_path);
     if (!out.is_open()) {
         std::cerr << "Could not open output file: " << output_path << std::endl;

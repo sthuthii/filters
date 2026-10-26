@@ -19,6 +19,4 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
-# Generated results
-results/output.csv
-results/plot.png
+

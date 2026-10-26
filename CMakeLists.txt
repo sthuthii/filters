@@ -44,6 +44,16 @@ add_executable(ukf_tracker
     ${FILTER_CORE}
 )
 
+# Comparison target: runs the linear CV-KF and nonlinear CTRV-EKF on
+# identical 2D position measurements and optionally reports RMSE.
+add_executable(compare_filters
+    src/compare_filters.cpp
+    src/MotionModel.cpp
+    src/MeasurementModel.cpp
+    src/TrackingMetrics.cpp
+    ${FILTER_CORE}
+)
+
 # Test executables (simple assert-based sanity checks, no framework needed).
 add_executable(test_kalman_filter
     tests/test_kalman_filter.cpp

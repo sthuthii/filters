@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "MSVC 2022",
+            "compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+            "intelliSenseMode": "windows-msvc-x64",
+            "cppStandard": "c++17",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/lib",
+                "${workspaceFolder}/lib/Eigen",
+                "${workspaceFolder}/lib/Utils",
+                "${workspaceFolder}/src"
+            ],
+            "defines": [
+                "_CRT_SECURE_NO_WARNINGS"
+            ]
+        }
+    ],
+    "version": 4
+}

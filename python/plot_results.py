@@ -13,13 +13,37 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
+def first_available_field(fieldnames, candidates):
+    for candidate in candidates:
+        if candidate in fieldnames:
+            return candidate
+    return None
+
+
 def read_csv(path, fields):
     with open(path, "r", newline="") as f:
         reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
         cols = {field: [] for field in fields}
+        resolved = {}
+        for field in fields:
+            if field in fieldnames:
+                resolved[field] = field
+            else:
+                candidates = {
+                    "t": ["t"],
+                    "z": ["z", "z1"],
+                    "pos_est": ["pos_est", "pos_est_1"],
+                    "vel_est": ["vel_est", "vel_est_1"],
+                }.get(field, [field])
+                resolved[field] = first_available_field(fieldnames, candidates)
+
         for row in reader:
             for field in fields:
-                cols[field].append(float(row[field]))
+                actual = resolved[field]
+                if actual is None:
+                    continue
+                cols[field].append(float(row[actual]))
     return cols
 
 
